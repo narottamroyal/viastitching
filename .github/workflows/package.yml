@@ -1,4 +1,4 @@
-name: ViaStitching
+name: Package
 
 on:
   push:
@@ -13,7 +13,8 @@ jobs:
         with:
           python-version: "3.10"
       - run: python package.py
+      - run: unzip viastitching.zip -d package
       - uses: actions/upload-artifact@v3
         with:
           name: ViaStitching
-          path: viastitching.zip
+          path: package/
