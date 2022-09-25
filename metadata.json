@@ -1,0 +1,28 @@
+{
+    "$schema": "https://go.kicad.org/pcm/schemas/v1",
+    "name": "viastitching",
+    "description": "ViaStitching action-plugin for KiCad",
+    "description_full": "Fills a selected copper area with a pattern of vias.",
+    "identifier": "com.github.weirdgyn.viastitching",
+    "type": "plugin",
+    "author": {
+        "name": "Michele Santucci",
+        "contact": {}
+    },
+    "license": "MIT",
+    "resources": {
+        "homepage": "https://github.com/weirdgyn/viastitching"
+    },
+    "versions": [
+        {
+            "version": "0.1.0",
+            "status": "development",
+            "kicad_version": "6.0",
+            "platforms": [
+                "linux",
+                "macos",
+                "windows"
+            ]
+        }
+    ]
+}
