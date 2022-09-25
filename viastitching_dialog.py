@@ -30,6 +30,7 @@ class ViaStitchingDialog(viastitching_gui):
         self.m_btnCancel.Bind(wx.EVT_BUTTON, self.onCloseWindow)
         self.m_btnOk.Bind(wx.EVT_BUTTON, self.onProcessAction)
         self.m_rClear.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
+        self.m_rStar.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_rFill.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.board = pcbnew.GetBoard()
         self.pcb_group = None
@@ -82,6 +83,7 @@ class ViaStitchingDialog(viastitching_gui):
         self.area = None
         self.net = None
         self.overlappings = None
+        self.star_pattern = False
 
         #Check for selected area
         if not self.GetAreaConfig():
@@ -291,11 +293,15 @@ class ViaStitchingDialog(viastitching_gui):
         #commit = pcbnew.COMMIT()
         viacount = 0
         x = left
+        offset_y = False
 
         #Cycle trough area bounding box checking and implanting vias
         layer = self.area.GetLayer()
         while x <= right:
             y = top
+            if self.star_pattern:
+                y += step_y / 2 if offset_y else 0
+                offset_y = not offset_y
             while y <= bottom:
                 p = pcbnew.wxPoint(x,y)
                 if self.area.HitTestFilledArea(layer, p, 0):
@@ -327,7 +333,7 @@ class ViaStitchingDialog(viastitching_gui):
     def onProcessAction(self, event):
         '''Manage main button (Ok) click event.'''
 
-        if(self.m_rFill.GetValue()):
+        if(self.m_rFill.GetValue() or self.m_rStar.GetValue()):
             self.FillupArea()
         else:
             self.ClearArea()
@@ -342,6 +348,8 @@ class ViaStitchingDialog(viastitching_gui):
             self.m_chkClearOwn.Enable()
         else:
             self.m_chkClearOwn.Disable()
+        
+        self.star_pattern = bool(self.m_rStar.GetValue())
 
 
     def onCloseWindow(self, event):
