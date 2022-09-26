@@ -43,12 +43,29 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_cbNet = wx.ComboBox( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_cbNetChoices, wx.CB_DROPDOWN|wx.CB_READONLY|wx.CB_SORT )
 		fgOptionsSizer.Add( self.m_cbNet, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
-		self.m_lblEmpty = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_lblEmpty.Wrap( -1 )
+		self.m_lblEmpty1 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblEmpty1.Wrap( -1 )
 
-		self.m_lblEmpty.Hide()
+		self.m_lblEmpty1.Hide()
 
-		fgOptionsSizer.Add( self.m_lblEmpty, 0, wx.ALL, 5 )
+		fgOptionsSizer.Add( self.m_lblEmpty1, 0, wx.ALL, 5 )
+
+		self.m_lblPattern = wx.StaticText( self, wx.ID_ANY, _(u"Via Pattern"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
+		self.m_lblPattern.Wrap( -1 )
+
+		fgOptionsSizer.Add( self.m_lblPattern, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
+
+		m_cbPatternChoices = [ _(u"Grid"), _(u"Star") ]
+		self.m_cbPattern = wx.ComboBox( self, wx.ID_ANY, _(u"Grid"), wx.DefaultPosition, wx.DefaultSize, m_cbPatternChoices, wx.CB_DROPDOWN|wx.CB_READONLY )
+		self.m_cbPattern.SetSelection( 0 )
+		fgOptionsSizer.Add( self.m_cbPattern, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
+
+		self.m_lblEmpty2 = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblEmpty2.Wrap( -1 )
+
+		self.m_lblEmpty2.Hide()
+
+		fgOptionsSizer.Add( self.m_lblEmpty2, 0, wx.ALL, 5 )
 
 		self.m_lblVia = wx.StaticText( self, wx.ID_ANY, _(u"Via (Size/Drill)"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_lblVia.Wrap( -1 )
@@ -134,16 +151,6 @@ class viastitching_gui ( wx.Dialog ):
 
 		fgOptionsSizer.Add( self.m_lblUnit4, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
-		self.m_lblPattern = wx.StaticText( self, wx.ID_ANY, _(u"Via Pattern"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
-		self.m_lblPattern.Wrap( -1 )
-
-		fgOptionsSizer.Add( self.m_lblPattern, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
-
-		m_cbPatternChoices = [ _(u"Grid"), _(u"Star") ]
-		self.m_cbPattern = wx.ComboBox( self, wx.ID_ANY, _(u"Grid"), wx.DefaultPosition, wx.DefaultSize, m_cbPatternChoices, wx.CB_DROPDOWN|wx.CB_READONLY )
-		self.m_cbPattern.SetSelection( 0 )
-		fgOptionsSizer.Add( self.m_cbPattern, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
-
 
 		bMainSizer.Add( fgOptionsSizer, 0, wx.EXPAND, 5 )
 
@@ -159,7 +166,7 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_rClear = wx.RadioButton( self, wx.ID_ANY, _(u"Clear"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bHSizer5.Add( self.m_rClear, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 
-		self.m_chkClearOwn = wx.CheckBox( self, wx.ID_ANY, _(u"Clear all vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_chkClearOwn = wx.CheckBox( self, wx.ID_ANY, _(u"Remove all vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_chkClearOwn.Enable( False )
 
 		bHSizer5.Add( self.m_chkClearOwn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
