@@ -32,6 +32,7 @@ class ViaStitchingDialog(viastitching_gui):
         self.m_rClear.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_rStar.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_rFill.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
+        self.m_chkClearOwn.Disable()
         self.board = pcbnew.GetBoard()
         self.pcb_group = None
 
