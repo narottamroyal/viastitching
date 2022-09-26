@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-# ViaStitching for pcbnew 
+# ViaStitching for pcbnew
 # This is the plugin WX dialog
 # (c) Michele Santucci 2019
-#
 
 import wx
 import pcbnew
@@ -14,29 +13,29 @@ from .viastitching_gui import viastitching_gui
 from math import sqrt
 
 _ = gettext.gettext
-__version__ = "0.2"
-__timecode__= 1972
+__version__ = "0.3.0"
+__timecode__ = 1972
 __viagroupname__ = "VIA_STITCHING_GROUP"
 
+
 class ViaStitchingDialog(viastitching_gui):
-    '''Class that gathers all the Gui controls.'''
+    """Class that gathers all the Gui controls."""
 
     def __init__(self, board):
-        '''Initialize the brand new instance.'''
+        """Initialize the brand new instance."""
 
         super(ViaStitchingDialog, self).__init__(None)
-        self.SetTitle(_(u"ViaStitching v{0}").format(__version__))
+        self.SetTitle(_(u"Via Stitching v{0}").format(__version__))
         self.Bind(wx.EVT_CLOSE, self.onCloseWindow)
         self.m_btnCancel.Bind(wx.EVT_BUTTON, self.onCloseWindow)
         self.m_btnOk.Bind(wx.EVT_BUTTON, self.onProcessAction)
         self.m_rClear.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
-        self.m_rStar.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_rFill.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_chkClearOwn.Disable()
         self.board = pcbnew.GetBoard()
         self.pcb_group = None
 
-        #Search trough groups 
+        # Search through groups
         for group in self.board.Groups():
             if group.GetName() == __viagroupname__:
                 self.pcb_group = group
@@ -46,7 +45,7 @@ class ViaStitchingDialog(viastitching_gui):
             self.pcb_group.SetName(__viagroupname__)
             self.board.Add(self.pcb_group)
 
-        #Use the same unit set int PCBNEW
+        # Use the same unit set int PCBNEW
         self.ToUserUnit = None
         self.FromUserUnit = None
         units_mode = pcbnew.GetUserUnits()
@@ -56,19 +55,23 @@ class ViaStitchingDialog(viastitching_gui):
             self.FromUserUnit = pcbnew.FromMils
             self.m_lblUnit1.SetLabel(_(u"mils"))
             self.m_lblUnit2.SetLabel(_(u"mils"))
+            self.m_lblUnit3.SetLabel(_(u"mils"))
         elif units_mode == 1:
             self.ToUserUnit = pcbnew.ToMM
             self.FromUserUnit = pcbnew.FromMM
             self.m_lblUnit1.SetLabel(_(u"mm"))
             self.m_lblUnit2.SetLabel(_(u"mm"))
-        elif units_mode == -1:
+            self.m_lblUnit3.SetLabel(_(u"mm"))
+        else:
             wx.MessageBox(_(u"Not a valid frame"))
             self.Destroy()
 
         # Get current via dimensions
         settings = board.GetDesignSettings()
-        self.m_txtViaSize.SetValue("%.6f" % self.ToUserUnit(settings.GetCurrentViaSize()))
-        self.m_txtViaDrillSize.SetValue("%.6f" % self.ToUserUnit(settings.GetCurrentViaDrill()))
+        self.m_txtViaSize.SetValue(
+            "%.6f" % self.ToUserUnit(settings.GetCurrentViaSize()))
+        self.m_txtViaDrillSize.SetValue(
+            "%.6f" % self.ToUserUnit(settings.GetCurrentViaDrill()))
 
         # Set default spacing to double the current via width
         spacing = self.ToUserUnit(settings.GetCurrentViaSize()) * 2
@@ -78,18 +81,16 @@ class ViaStitchingDialog(viastitching_gui):
         self.area = None
         self.net = None
         self.overlappings = None
-        self.star_pattern = False
 
-        #Check for selected area
+        # Check for selected area
         if not self.GetAreaConfig():
             wx.MessageBox(_(u"Please select a valid area"))
             self.Destroy()
         else:
-            #Get overlapping items
+            # Get overlapping items
             self.GetOverlappingItems()
-            #Populate nets checkbox
-            self.PopulateNets() 
-
+            # Populate nets checkbox
+            self.PopulateNets()
 
     def GetOverlappingItems(self):
         """Collect overlapping items.
@@ -98,7 +99,7 @@ class ViaStitchingDialog(viastitching_gui):
 
         area_bbox = self.area.GetBoundingBox()
 
-        if hasattr(self.board, 'GetModules'):
+        if hasattr(self.board, "GetModules"):
             modules = self.board.GetModules()
         else:
             modules = self.board.GetFootprints()
@@ -116,13 +117,12 @@ class ViaStitchingDialog(viastitching_gui):
                 for pad in item.Pads():
                     self.overlappings.append(pad)
 
-        #TODO: change algorithm to 'If one of the candidate area's edges overlaps with target area declare candidate as overlapping' 
+        # TODO: change algorithm to 'If one of the candidate area's edges overlaps with target area declare candidate as overlapping'
         for i in range(0, self.board.GetAreaCount()):
             item = self.board.GetArea(i)
             if item.GetBoundingBox().Intersects(area_bbox):
                 if item.GetNetname() != self.net:
                     self.overlappings.append(item)
-
 
     def GetAreaConfig(self):
         """Check selected area (if any) and verify if it is a valid container for vias.
@@ -144,58 +144,54 @@ class ViaStitchingDialog(viastitching_gui):
 
         return False
 
-
     def PopulateNets(self):
-        '''Populate nets widget.'''
+        """Populate nets widget."""
 
         nets = self.board.GetNetsByName()
 
-        #Tricky loop, the iterator should return two values, unluckly I'm not able to use the
-        #first value of the couple so I'm recycling it as netname.
+        # Tricky loop, the iterator should return two values, unluckly I'm not able to use the
+        # first value of the couple so I'm recycling it as netname.
         for netname, net in nets.items():
             netname = net.GetNetname()
             if (netname != None) and (netname != ""):
                 self.m_cbNet.Append(netname)
 
-        #Select the net used by area (if any)
+        # Select the net used by area (if any)
         if self.net != None:
             index = self.m_cbNet.FindString(self.net)
-            self.m_cbNet.Select(index)                        
-
+            self.m_cbNet.Select(index)
 
     def ClearArea(self):
-        '''Clear selected area.'''
+        """Clear selected area."""
 
         undo = self.m_chkClearOwn.IsChecked()
         drillsize = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
         viasize = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
         netname = self.m_cbNet.GetStringSelection()
-        netcode = self.board.GetNetcodeFromNetname(netname)
-        #commit = pcbnew.COMMIT()
+        # commit = pcbnew.COMMIT()
         viacount = 0
 
         for item in self.board.GetTracks():
             if type(item) is pcbnew.PCB_VIA:
-                #If the user selected the Undo action only signed/grouped vias are removed, 
-                #otherwise are removed vias matching values set in the dialog.
-                
-                #if undo and (item.GetTimeStamp() == __timecode__):
+                # If the user selected the Undo action only signed/grouped vias are removed,
+                # otherwise are removed vias matching values set in the dialog.
+
+                # if undo and (item.GetTimeStamp() == __timecode__):
                 if undo and (self.pcb_group is not None):
                     group = item.GetParentGroup()
                     if(group is not None and group.GetName() == __viagroupname__):
                         self.board.Remove(item)
-                        viacount+=1
-                        #commit.Remove(item)
+                        viacount += 1
+                        # commit.Remove(item)
                 elif (not undo) and self.area.HitTestFilledArea(self.area.GetLayer(), item.GetPosition(), 0) and (item.GetDrillValue() == drillsize) and (item.GetWidth() == viasize) and (item.GetNetname() == netname):
                     self.board.Remove(item)
-                    viacount+=1
-                    #commit.Remove(item)
+                    viacount += 1
+                    # commit.Remove(item)
 
         if viacount > 0:
             wx.MessageBox(_(u"Removed: %d vias!") % viacount)
-            #commit.Push()
+            # commit.Push()
             pcbnew.Refresh()
-
 
     def CheckClearance(self, p1, area, clearance):
         """Check if position specified by p1 comply with given clearance in area.
@@ -211,8 +207,8 @@ class ViaStitchingDialog(viastitching_gui):
         """
 
         corners = area.GetNumCorners()
-        #Calculate minimum distance from corners
-        #TODO: remove?
+        # Calculate minimum distance from corners
+        # TODO: remove?
         for i in range(0, corners):
             corner = area.GetCornerPosition(i)
             p2 = corner.getWxPoint()
@@ -221,7 +217,7 @@ class ViaStitchingDialog(viastitching_gui):
             if distance < clearance:
                 return False
 
-        #Calculate minimum distance from edges
+        # Calculate minimum distance from edges
         for i in range(0, corners):
             if i == corners-1:
                 corner1 = area.GetCornerPosition(corners-1)
@@ -242,8 +238,7 @@ class ViaStitchingDialog(viastitching_gui):
             if distance < clearance:
                 return False
 
-        return True     
-
+        return True
 
     def CheckOverlap(self, via):
         """Check if via overlaps or interfere with other items on the board.
@@ -259,7 +254,7 @@ class ViaStitchingDialog(viastitching_gui):
 
         for item in self.overlappings:
             if type(item) is pcbnew.PAD:
-                if item.GetBoundingBox().Intersects( via.GetBoundingBox() ):
+                if item.GetBoundingBox().Intersects(via.GetBoundingBox()):
                     return True
             elif type(item) is pcbnew.PCB_ARC or type(item) is pcbnew.PCB_TRACK:
                 track_shape = item.GetEffectiveShape()
@@ -267,18 +262,17 @@ class ViaStitchingDialog(viastitching_gui):
                 if track_shape.Collide(via_shape, clearance):
                     return True
             elif type(item) is pcbnew.PCB_VIA:
-                #Overlapping with vias work best if checking is performed by intersection
-                if item.GetBoundingBox().Intersects( via.GetBoundingBox() ):
+                # Overlapping with vias work best if checking is performed by intersection
+                if item.GetBoundingBox().Intersects(via.GetBoundingBox()):
                     return True
             elif type(item) is pcbnew.ZONE:
                 if item.HitTestFilledArea(self.area.GetLayer(), via.GetPosition(), 0):
                     return True
-        
+
         return False
 
-
     def FillupArea(self):
-        '''Fills selected area with vias.'''        
+        """Fills selected area with vias."""
 
         drillsize = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
         viasize = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
@@ -292,20 +286,23 @@ class ViaStitchingDialog(viastitching_gui):
         left = bbox.GetLeft()
         netname = self.m_cbNet.GetStringSelection()
         netcode = self.board.GetNetcodeFromNetname(netname)
-        #commit = pcbnew.COMMIT()
-        viacount = 0
-        x = left
-        offset_y = False
-
-        #Cycle trough area bounding box checking and implanting vias
+        pattern = self.m_cbPattern.GetStringSelection()
+        offset_x = False
         layer = self.area.GetLayer()
-        while x <= right:
-            y = top
-            if self.star_pattern:
-                y += step_y / 2 if offset_y else 0
-                offset_y = not offset_y
-            while y <= bottom:
-                p = pcbnew.wxPoint(x,y)
+        # commit = pcbnew.COMMIT()
+
+        # Cycle through area bounding box checking and implanting vias
+        viacount = 0
+        y = top
+        while y <= bottom:
+            x = left
+            if pattern == "Star":
+                # Offset every second row to create star pattern
+                x += step_x / 2 if offset_x else 0
+                offset_x = not offset_x
+
+            while x <= right:
+                p = pcbnew.wxPoint(x, y)
                 if self.area.HitTestFilledArea(layer, p, 0):
                     via = pcbnew.PCB_VIA(self.board)
                     via.SetPosition(p)
@@ -313,55 +310,50 @@ class ViaStitchingDialog(viastitching_gui):
                     via.SetNetCode(netcode)
                     via.SetDrill(drillsize)
                     via.SetWidth(viasize)
-                    #via.SetTimeStamp(__timecode__)
+                    # via.SetTimeStamp(__timecode__)
                     if not self.CheckOverlap(via):
-                        #Check clearance only if clearance value differs from 0 (disabled)
+                        # Check clearance only if clearance value differs from 0 (disabled)
                         if (clearance == 0) or self.CheckClearance(p, self.area, clearance):
                             self.board.Add(via)
-                            #commit.Add(via)
+                            # commit.Add(via)
                             self.pcb_group.AddItem(via)
-                            viacount +=1
-                y += step_y
-            x += step_x
+                            viacount += 1
+                x += step_x
+            y += step_y
 
         if viacount > 0:
             wx.MessageBox(_(u"Implanted: %d vias!") % viacount)
-            #commit.Push()
+            # commit.Push()
             pcbnew.Refresh()
         else:
             wx.MessageBox(_(u"No vias implanted!"))
 
-
     def onProcessAction(self, event):
-        '''Manage main button (Ok) click event.'''
+        """Manage main button (Ok) click event."""
 
-        if(self.m_rFill.GetValue() or self.m_rStar.GetValue()):
+        if self.m_rFill.GetValue():
             self.FillupArea()
         else:
             self.ClearArea()
 
         self.Destroy()
 
-    
     def onRadioButtonCheck(self, event):
-        '''Manage radio button state change event.'''
+        """Manage radio button state change event."""
 
         if self.m_rClear.GetValue():
             self.m_chkClearOwn.Enable()
         else:
             self.m_chkClearOwn.Disable()
-        
-        self.star_pattern = bool(self.m_rStar.GetValue())
-
 
     def onCloseWindow(self, event):
-        '''Manage Close button click event.'''
+        """Manage Close button click event."""
 
         self.Destroy()
 
 
 def InitViaStitchingDialog(board):
-    '''Initalize dialog.'''
+    """Initialize dialog."""
 
     dlg = ViaStitchingDialog(board)
     dlg.Show(True)
