@@ -114,7 +114,7 @@ class ViaStitchingDialog(viastitching_gui):
         self.overlappings = []
 
         for item in tracks:
-            if (type(item) is pcbnew.PCB_VIA) and (item.GetBoundingBox().Intersects(area_bbox)):
+            if type(item) in [pcbnew.PCB_ARC, pcbnew.PCB_TRACK, pcbnew.PCB_VIA] and item.GetBoundingBox().Intersects(area_bbox):
                 self.overlappings.append(item)
 
         for item in modules:
@@ -261,9 +261,16 @@ class ViaStitchingDialog(viastitching_gui):
             bool: True if via overlaps with an item, False otherwise.
         """
 
+        clearance = self.FromUserUnit(float(self.m_txtClearance.GetValue()))
+
         for item in self.overlappings:
             if type(item) is pcbnew.PAD:
                 if item.GetBoundingBox().Intersects( via.GetBoundingBox() ):
+                    return True
+            elif type(item) is pcbnew.PCB_ARC or type(item) is pcbnew.PCB_TRACK:
+                track_shape = item.GetEffectiveShape()
+                via_shape = via.GetEffectiveShape()
+                if track_shape.Collide(via_shape, clearance):
                     return True
             elif type(item) is pcbnew.PCB_VIA:
                 #Overlapping with vias work best if checking is performed by intersection
