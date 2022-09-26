@@ -33,8 +33,8 @@ Some features still to code:
 - [x] Match user units (mm/inches).
 - [x] Add clear area function.
 - [ ] Draw a better UI (if anyone is willing to contribute please read the following section).
-- [ ] Collision between new vias and underlying objects: 
-   - [ ] tracks, 
+- [x] Collision between new vias and underlying objects: 
+   - [x] tracks, 
    - [x] zones, 
    - [x] pads,
    - [x] modules,
