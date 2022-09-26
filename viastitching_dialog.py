@@ -56,31 +56,25 @@ class ViaStitchingDialog(viastitching_gui):
             self.FromUserUnit = pcbnew.FromMils
             self.m_lblUnit1.SetLabel(_(u"mils"))
             self.m_lblUnit2.SetLabel(_(u"mils"))
-            self.m_txtVSpacing.SetValue("40")
-            self.m_txtHSpacing.SetValue("40")
         elif units_mode == 1:
             self.ToUserUnit = pcbnew.ToMM
             self.FromUserUnit = pcbnew.FromMM
             self.m_lblUnit1.SetLabel(_(u"mm"))
             self.m_lblUnit2.SetLabel(_(u"mm"))
-            self.m_txtVSpacing.SetValue("1")
-            self.m_txtHSpacing.SetValue("1")
         elif units_mode == -1:
             wx.MessageBox(_(u"Not a valid frame"))
             self.Destroy()
 
-        #Get default Vias dimensions
-        via_dim_list = self.board.GetViasDimensionsList()
+        # Get current via dimensions
+        settings = board.GetDesignSettings()
+        self.m_txtViaSize.SetValue("%.6f" % self.ToUserUnit(settings.GetCurrentViaSize()))
+        self.m_txtViaDrillSize.SetValue("%.6f" % self.ToUserUnit(settings.GetCurrentViaDrill()))
 
-        if via_dim_list:
-            via_dims = via_dim_list.pop()
-        else:
-            wx.MessageBox(_(u"Please set via drill/size in board"))
-            self.Destroy()
+        # Set default spacing to double the current via width
+        spacing = self.ToUserUnit(settings.GetCurrentViaSize()) * 2
+        self.m_txtVSpacing.SetValue("%.6f" % spacing)
+        self.m_txtHSpacing.SetValue("%.6f" % spacing)
 
-        self.m_txtViaSize.SetValue("%.6f" % self.ToUserUnit(via_dims.m_Diameter))
-        self.m_txtViaDrillSize.SetValue("%.6f" % self.ToUserUnit(via_dims.m_Drill))
-        via_dim_list.push_back(via_dims)
         self.area = None
         self.net = None
         self.overlappings = None
