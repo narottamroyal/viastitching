@@ -1,6 +1,6 @@
-# ViaStitching
+# Via Stitching
 
-Via Stitching action-plugin for use with KiCAD 6.0+.
+Via Stitching action-plugin for use with KiCad 6.0+.
 
 Fill a selected copper area with a pattern of vias.
 
@@ -10,14 +10,15 @@ Whenever you need to fill a copper area with vias to improve thermal or current 
 
 ## How it works
 
-The workflow is pretty simple: select the area you want to fill, click on ```Tools->External Plugins->ViaStitching``` or click on ![AddNet icon](viastitching.png?raw=true) toolbar icon: a dialog like the one below should appear:
+The workflow is pretty simple: select the area you want to fill, click on ```Tools->External Plugins->ViaStitching``` or click on ![AddNet icon](viastitching.png?raw=true) toolbar icon, and a dialog like the one below should appear:
 
 ![AddNet dialog](pictures/viastitching_dialog.PNG?raw=true "ViaStitching dialog")
 
-The vias you're going to create needs to be assigned a net usually this's the net of the target area for this reason the plugin pre-select this net for you; of course you're free to select another net if you like.
-The plugin dialog let you also specify the parameters for the via creation (via size and drill size), such values are taken from board configuration, you can change them but beware to use values that will not conflict with DRC rules; you can customize also: vertical and horizontal spacing between vias and edge clearance (insert 0 will disable check).
-When you're satisfied with your settings you have just to press __Ok__ and the fillup will begin (I'm assuming __Fill__ action is checked).
-If everything goes fine you'll get something like this:
+The vias this plugin creates need to be assigned to a net; usually this is the net of the target area, so the plugin select this net for you by default (of course you're free to select another net if desired).
+The plugin dialog also lets you specify the via size and drill size. The current via dimensions are used by default; you can change them but beware these values may conflict with DRC rules.
+You can also customize the vertical and horizontal spacing between vias, and the edge clearance (a value of 0 will disable clearance checking).
+When you're satisfied with the settings, just to press __Ok__ and the vias will be generated (assuming __Fill__ was selected).
+If everything goes well, you'll get something like this:
 
 ![viastitching result](pictures/viastitching_result.PNG?raw=true "ViaStitching result")
 
@@ -47,7 +48,7 @@ Some features still to code:
 
 ## Coding notes
 
-If you are willing to make any modification to the GUI (you're welcome) through __wxFormBuilder__ (```viastitching.fbp``` file) remember to modify this line (around line 25 ```viastitching_gui.py```):
+If you are willing to modify the GUI (you're welcome) through __wxFormBuilder__ (```viastitching.fbp``` file) remember to modify this line (around line 25 ```viastitching_gui.py```):
 ```
 self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 ```
@@ -58,11 +59,11 @@ if sys.version_info[0] == 2:
 else:
  self.SetSizeHints( wx.DefaultSize, wx.DefaultSize )
 ```
-This modification allows the code to work with __Python 2__ (that's the standard KiCAD/Python distribution AFAIK) as long as __Python 3__, please note that you need to ```import sys```. Special thanks to *NilujePerchut* for this hint.
+This modification allows the code to work with __Python 2__ as well as __Python 3__, please note that you need to ```import sys```. Special thanks to *NilujePerchut* for this hint.
 
 ## kicad-action-scripts - ViaStitching plugin similarity
 
-Yes my plugin is pretty similar to this plugin but I'm using a radically different approach in coding. At the time I wrote the first release of my plugin unluckly __jsreynaud__ plugin wasn't working but I bet he will fix it.
+Yes, my plugin is pretty similar to this plugin, but I'm using a radically different approach in coding. At the time I wrote the first release of my plugin unluckly __jsreynaud__'s plugin wasn't working but I bet he will fix it.
 
 ## References
 
@@ -82,8 +83,8 @@ Tool I got inspired by:
 
 ## Greetings
 
-Hope someone find my work useful or at least *inspiring* to create something else/better.
-I would like to thank everyone has shared his knoledge of Python and KiCAD with me: Thanks!
+I hope someone finds my work useful or at least provides *inspiration* to create something else/better.
+I would like to thank everyone who has shared their knowledge of Python and KiCad with me: Thanks!
 
 #
 
