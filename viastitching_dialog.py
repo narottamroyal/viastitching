@@ -75,8 +75,12 @@ class ViaStitchingDialog(viastitching_gui):
 
         # Set default spacing to double the current via width
         spacing = self.ToUserUnit(settings.GetCurrentViaSize()) * 2
-        self.m_txtVSpacing.SetValue("%.6f" % spacing)
-        self.m_txtHSpacing.SetValue("%.6f" % spacing)
+        self.m_txtSpacingX.SetValue("%.6f" % spacing)
+        self.m_txtSpacingY.SetValue("%.6f" % spacing)
+
+        # Set default offsets
+        self.m_txtOffsetX.SetValue("%.6f" % 0)
+        self.m_txtOffsetY.SetValue("%.6f" % 0)
 
         # Set default clearances
         self.m_txtEdgeClearance.SetValue("0")
@@ -279,10 +283,12 @@ class ViaStitchingDialog(viastitching_gui):
     def FillupArea(self):
         """Fills selected area with vias."""
 
-        drillsize = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
-        viasize = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
-        step_x = self.FromUserUnit(float(self.m_txtHSpacing.GetValue()))
-        step_y = self.FromUserUnit(float(self.m_txtVSpacing.GetValue()))
+        via_size = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
+        drill_size = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
+        step_x = self.FromUserUnit(float(self.m_txtSpacingX.GetValue()))
+        step_y = self.FromUserUnit(float(self.m_txtSpacingY.GetValue()))
+        offset_x = self.FromUserUnit(float(self.m_txtOffsetX.GetValue()))
+        offset_y = self.FromUserUnit(float(self.m_txtOffsetY.GetValue()))
         clearance = self.FromUserUnit(
             float(self.m_txtEdgeClearance.GetValue()))
         bbox = self.area.GetBoundingBox()
@@ -299,9 +305,9 @@ class ViaStitchingDialog(viastitching_gui):
 
         # Cycle through area bounding box checking and implanting vias
         viacount = 0
-        y = top
+        y = top + offset_y
         while y <= bottom:
-            x = left
+            x = left + offset_x
             if pattern == "Star":
                 # Offset every second row to create star pattern
                 x += step_x / 2 if offset_x else 0
@@ -314,8 +320,8 @@ class ViaStitchingDialog(viastitching_gui):
                     via.SetPosition(p)
                     via.SetLayer(layer)
                     via.SetNetCode(netcode)
-                    via.SetDrill(drillsize)
-                    via.SetWidth(viasize)
+                    via.SetDrill(drill_size)
+                    via.SetWidth(via_size)
                     # via.SetTimeStamp(__timecode__)
                     if not self.CheckOverlap(via):
                         # Check clearance only if clearance value differs from 0 (disabled)
