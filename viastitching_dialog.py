@@ -56,12 +56,14 @@ class ViaStitchingDialog(viastitching_gui):
             self.m_lblUnit1.SetLabel(_(u"mils"))
             self.m_lblUnit2.SetLabel(_(u"mils"))
             self.m_lblUnit3.SetLabel(_(u"mils"))
+            self.m_lblUnit4.SetLabel(_(u"mils"))
         elif units_mode == 1:
             self.ToUserUnit = pcbnew.ToMM
             self.FromUserUnit = pcbnew.FromMM
             self.m_lblUnit1.SetLabel(_(u"mm"))
             self.m_lblUnit2.SetLabel(_(u"mm"))
             self.m_lblUnit3.SetLabel(_(u"mm"))
+            self.m_lblUnit4.SetLabel(_(u"mm"))
         else:
             wx.MessageBox(_(u"Not a valid frame"))
             self.Destroy()
@@ -284,7 +286,8 @@ class ViaStitchingDialog(viastitching_gui):
         """Fills selected area with vias."""
 
         via_size = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
-        drill_size = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
+        drill_size = self.FromUserUnit(
+            float(self.m_txtViaDrillSize.GetValue()))
         step_x = self.FromUserUnit(float(self.m_txtSpacingX.GetValue()))
         step_y = self.FromUserUnit(float(self.m_txtSpacingY.GetValue()))
         offset_x = self.FromUserUnit(float(self.m_txtOffsetX.GetValue()))
