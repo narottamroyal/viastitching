@@ -78,6 +78,11 @@ class ViaStitchingDialog(viastitching_gui):
         self.m_txtVSpacing.SetValue("%.6f" % spacing)
         self.m_txtHSpacing.SetValue("%.6f" % spacing)
 
+        # Set default clearances
+        self.m_txtEdgeClearance.SetValue("0")
+        self.m_txtTrackClearance.SetValue(
+            "%.6f" % self.ToUserUnit(settings.GetBiggestClearanceValue()))
+
         self.area = None
         self.net = None
         self.overlappings = None
@@ -128,7 +133,7 @@ class ViaStitchingDialog(viastitching_gui):
         """Check selected area (if any) and verify if it is a valid container for vias.
 
         Returns:
-            bool: Returns True if an area/zone is selected and match implant criteria, False otherwise.  
+            bool: Returns True if an area/zone is selected and match implant criteria, False otherwise.
         """
 
         for i in range(0, self.board.GetAreaCount()):
@@ -250,13 +255,13 @@ class ViaStitchingDialog(viastitching_gui):
             bool: True if via overlaps with an item, False otherwise.
         """
 
-        clearance = self.FromUserUnit(float(self.m_txtClearance.GetValue()))
-
         for item in self.overlappings:
             if type(item) is pcbnew.PAD:
                 if item.GetBoundingBox().Intersects(via.GetBoundingBox()):
                     return True
             elif type(item) is pcbnew.PCB_ARC or type(item) is pcbnew.PCB_TRACK:
+                clearance = self.FromUserUnit(
+                    float(self.m_txtTrackClearance.GetValue()))
                 track_shape = item.GetEffectiveShape()
                 via_shape = via.GetEffectiveShape()
                 if track_shape.Collide(via_shape, clearance):
@@ -278,7 +283,8 @@ class ViaStitchingDialog(viastitching_gui):
         viasize = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
         step_x = self.FromUserUnit(float(self.m_txtHSpacing.GetValue()))
         step_y = self.FromUserUnit(float(self.m_txtVSpacing.GetValue()))
-        clearance = self.FromUserUnit(float(self.m_txtClearance.GetValue()))
+        clearance = self.FromUserUnit(
+            float(self.m_txtEdgeClearance.GetValue()))
         bbox = self.area.GetBoundingBox()
         top = bbox.GetTop()
         bottom = bbox.GetBottom()

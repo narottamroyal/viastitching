@@ -30,11 +30,11 @@ class viastitching_gui ( wx.Dialog ):
 
 		bMainSizer = wx.BoxSizer( wx.VERTICAL )
 
-		fgOptionsSizer = wx.FlexGridSizer( 0, 2, 0, 0 )
+		fgOptionsSizer = wx.FlexGridSizer( 0, 3, 0, 0 )
 		fgOptionsSizer.SetFlexibleDirection( wx.BOTH )
 		fgOptionsSizer.SetNonFlexibleGrowMode( wx.FLEX_GROWMODE_SPECIFIED )
 
-		self.m_lblNetName = wx.StaticText( self, wx.ID_ANY, _(u"Net Name"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblNetName = wx.StaticText( self, wx.ID_ANY, _(u"Net Name"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_lblNetName.Wrap( -1 )
 
 		fgOptionsSizer.Add( self.m_lblNetName, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_RIGHT, 5 )
@@ -43,7 +43,14 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_cbNet = wx.ComboBox( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, m_cbNetChoices, wx.CB_DROPDOWN|wx.CB_READONLY|wx.CB_SORT )
 		fgOptionsSizer.Add( self.m_cbNet, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
-		self.m_lblVia = wx.StaticText( self, wx.ID_ANY, _(u"Via (Size/Drill)"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblEmpty = wx.StaticText( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblEmpty.Wrap( -1 )
+
+		self.m_lblEmpty.Hide()
+
+		fgOptionsSizer.Add( self.m_lblEmpty, 0, wx.ALL, 5 )
+
+		self.m_lblVia = wx.StaticText( self, wx.ID_ANY, _(u"Via (Size/Drill)"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_lblVia.Wrap( -1 )
 
 		fgOptionsSizer.Add( self.m_lblVia, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_RIGHT, 5 )
@@ -56,54 +63,57 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_txtViaDrillSize = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bHSizer1.Add( self.m_txtViaDrillSize, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-		self.m_lblUnit1 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_lblUnit1.Wrap( -1 )
-
-		bHSizer1.Add( self.m_lblUnit1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
 
 		fgOptionsSizer.Add( bHSizer1, 1, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.EXPAND, 5 )
 
-		self.m_lblSpacing = wx.StaticText( self, wx.ID_ANY, _(u"Spacing (V/H)"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit1 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit1.Wrap( -1 )
+
+		fgOptionsSizer.Add( self.m_lblUnit1, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+		self.m_lblSpacing = wx.StaticText( self, wx.ID_ANY, _(u"Spacing (H/V)"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_lblSpacing.Wrap( -1 )
 
 		fgOptionsSizer.Add( self.m_lblSpacing, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 		bHSizer2 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_txtVSpacing = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
-		bHSizer2.Add( self.m_txtVSpacing, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
-
 		self.m_txtHSpacing = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
 		bHSizer2.Add( self.m_txtHSpacing, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-		self.m_lblUnit2 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_lblUnit2.Wrap( -1 )
-
-		bHSizer2.Add( self.m_lblUnit2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+		self.m_txtVSpacing = wx.TextCtrl( self, wx.ID_ANY, wx.EmptyString, wx.DefaultPosition, wx.DefaultSize, 0 )
+		bHSizer2.Add( self.m_txtVSpacing, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 
 		fgOptionsSizer.Add( bHSizer2, 1, wx.EXPAND, 5 )
 
-		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, _(u"Clearance"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit2 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit2.Wrap( -1 )
+
+		fgOptionsSizer.Add( self.m_lblUnit2, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+
+		self.m_staticText6 = wx.StaticText( self, wx.ID_ANY, _(u"Clearance\n(Edge/Track)"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_staticText6.Wrap( -1 )
 
 		fgOptionsSizer.Add( self.m_staticText6, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.ALIGN_RIGHT, 5 )
 
 		bHSizer3 = wx.BoxSizer( wx.HORIZONTAL )
 
-		self.m_txtClearance = wx.TextCtrl( self, wx.ID_ANY, _(u"0"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		bHSizer3.Add( self.m_txtClearance, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
+		self.m_txtEdgeClearance = wx.TextCtrl( self, wx.ID_ANY, _(u"0"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bHSizer3.Add( self.m_txtEdgeClearance, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
-		self.m_lblUnit3 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_lblUnit3.Wrap( -1 )
-
-		bHSizer3.Add( self.m_lblUnit3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+		self.m_txtTrackClearance = wx.TextCtrl( self, wx.ID_ANY, _(u"0"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		bHSizer3.Add( self.m_txtTrackClearance, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
 
 
 		fgOptionsSizer.Add( bHSizer3, 1, wx.EXPAND, 5 )
 
-		self.m_lblPattern = wx.StaticText( self, wx.ID_ANY, _(u"Pattern"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit3 = wx.StaticText( self, wx.ID_ANY, _(u"mm"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_lblUnit3.Wrap( -1 )
+
+		fgOptionsSizer.Add( self.m_lblUnit3, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+
+		self.m_lblPattern = wx.StaticText( self, wx.ID_ANY, _(u"Via Pattern"), wx.DefaultPosition, wx.DefaultSize, wx.ALIGN_RIGHT )
 		self.m_lblPattern.Wrap( -1 )
 
 		fgOptionsSizer.Add( self.m_lblPattern, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_RIGHT, 5 )
@@ -128,8 +138,7 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_rClear = wx.RadioButton( self, wx.ID_ANY, _(u"Clear"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bHSizer4.Add( self.m_rClear, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 
-		self.m_chkClearOwn = wx.CheckBox( self, wx.ID_ANY, _(u"Only clear plugin placed vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_chkClearOwn.SetValue(True)
+		self.m_chkClearOwn = wx.CheckBox( self, wx.ID_ANY, _(u"Clear all vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		self.m_chkClearOwn.Enable( False )
 
 		bHSizer4.Add( self.m_chkClearOwn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
