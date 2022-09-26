@@ -299,7 +299,7 @@ class ViaStitchingDialog(viastitching_gui):
         netname = self.m_cbNet.GetStringSelection()
         netcode = self.board.GetNetcodeFromNetname(netname)
         pattern = self.m_cbPattern.GetStringSelection()
-        offset_x = False
+        offset_row = False
         layer = self.area.GetLayer()
         # commit = pcbnew.COMMIT()
 
@@ -310,8 +310,8 @@ class ViaStitchingDialog(viastitching_gui):
             x = left + offset_x
             if pattern == "Star":
                 # Offset every second row to create star pattern
-                x += step_x / 2 if offset_x else 0
-                offset_x = not offset_x
+                x += step_x / 2 if offset_row else 0
+                offset_row = not offset_row
 
             while x <= right:
                 p = pcbnew.wxPoint(x, y)
