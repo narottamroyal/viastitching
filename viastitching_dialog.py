@@ -139,7 +139,7 @@ class ViaStitchingDialog(viastitching_gui):
         """Check selected area (if any) and verify if it is a valid container for vias.
 
         Returns:
-            bool: Returns True if an area/zone is selected and matchs the insertion criteria, False otherwise.
+            bool: Returns True if an area/zone is selected and matches the insertion criteria, False otherwise.
         """
 
         for i in range(0, self.board.GetAreaCount()):
