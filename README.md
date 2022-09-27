@@ -8,6 +8,13 @@ Fills a selected copper area with a pattern of vias.
 This plugin can fill copper areas with vias to improve thermal conduction, tie different layers together, or reduce resistance/inductance between layers.
 The plugin relies on pre-existing areas, so you must define and select an area before starting the plugin.
 
+## Installation
+
+- Download the packaged version of this plugin: [ViaStitching.zip](https://nightly.link/narottamroyal/viastitching/workflows/package/master/ViaStitching.zip)
+- Open the Plugin and Content Manager in KiCad 6
+- Click `Install from File...` and select `ViaStitching.zip` to install the plugin
+![via stitching installation](images/via-stitching-installation.png)
+
 ## Usage
 
  - Select the area you want to fill
