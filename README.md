@@ -58,20 +58,20 @@ In future releases, the via generation process will prevent vias from overlappin
 ## TODO
 
 Some features still to code:
-- [x] Match user units (mm/inches).
-- [x] Add clear area function.
-- [ ] Draw a better UI (if anyone is willing to contribute, please read the following section).
+- [x] Match user units (mm/inches)
+- [x] Add clear area function
+- [x] Draw a better UI (if anyone is willing to contribute, please read the following section)
 - [x] Collision between new vias and underlying objects: 
    - [x] tracks
    - [x] zones
    - [x] pads
    - [x] modules
    - [x] vias
-- [ ] Different fillup patterns/modes (bounding box, centered spiral).
-- [x] Avoid placing vias near area edges (define clearance).
-- [ ] History management (board commit).
-- [ ] Localization.
-- [ ] Any request?
+- [ ] Different fillup patterns/modes (bounding box, centered spiral)
+- [x] Avoid placing vias near area edges (define clearance)
+- [ ] History management (board commit)
+- [ ] Localization
+- [ ] Any other requests?
 
 ## Coding notes
 
@@ -90,22 +90,21 @@ This modification allows the code to work with __Python 2__ as well as __Python 
 
 ## kicad-action-scripts - ViaStitching plugin similarity
 
-Yes, my plugin is pretty similar to this plugin, but I'm using a radically different approach in coding. At the time I wrote the first release of my plugin unluckly __jsreynaud__'s plugin wasn't working but I bet he will fix it.
+Yes, this plugin is fairly similar to the kicad-action-scripts plugin, but the code for this plugin uses a different. At the time of writing, __jsreynaud__'s plugin isn't very functional for KiCad 6, but hopefully they will fix it!
 
 ## References
 
 Some useful references that helped me coding this plugin:
-1. https://sourceforge.net/projects/wxformbuilder/
+1. https://github.com/wxFormBuilder/wxFormBuilder
 2. https://wxpython.org/
-3. http://docs.kicad-pcb.org/doxygen-python/namespacepcbnew.html
+3. https://docs.kicad.org/doxygen-python/namespacepcbnew.html
 4. https://forum.kicad.info/c/external-plugins
-5. https://github.com/KiCad/kicad-source-mirror/blob/master/Documentation/development/pcbnew-plugins.md
-6. https://kicad.mmccoo.com/
-7. http://docs.kicad-pcb.org/5.1.4/en/pcbnew/pcbnew.html#kicad_scripting_reference
+5. https://kicad.mmccoo.com/
+6. https://dev-docs.kicad.org/en/python/pcbnew/
 
 
 Tool I got inspired by:
-- Altium Via Stitching feature!
+- Altium's via stitching feature
 - https://github.com/jsreynaud/kicad-action-scripts
 
 ## Greetings
