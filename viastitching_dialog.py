@@ -19,7 +19,7 @@ __viagroupname__ = "VIA_STITCHING_GROUP"
 
 
 class ViaStitchingDialog(viastitching_gui):
-    """Class that gathers all the Gui controls."""
+    """Class that gathers all the GUI controls."""
 
     def __init__(self, board):
         """Initialize the brand new instance."""
@@ -139,7 +139,7 @@ class ViaStitchingDialog(viastitching_gui):
         """Check selected area (if any) and verify if it is a valid container for vias.
 
         Returns:
-            bool: Returns True if an area/zone is selected and match implant criteria, False otherwise.
+            bool: Returns True if an area/zone is selected and matchs the insertion criteria, False otherwise.
         """
 
         for i in range(0, self.board.GetAreaCount()):
@@ -200,7 +200,7 @@ class ViaStitchingDialog(viastitching_gui):
                     # commit.Remove(item)
 
         if viacount > 0:
-            wx.MessageBox(_(u"Removed: %d vias!") % viacount)
+            wx.MessageBox(_(u"Removed %d vias!") % viacount)
             # commit.Push()
             pcbnew.Refresh()
 
@@ -306,7 +306,7 @@ class ViaStitchingDialog(viastitching_gui):
         layer = self.area.GetLayer()
         # commit = pcbnew.COMMIT()
 
-        # Cycle through area bounding box checking and implanting vias
+        # Cycle through area bounding box checking and inserting vias
         viacount = 0
         y = top + offset_y
         while y <= bottom:
@@ -337,11 +337,11 @@ class ViaStitchingDialog(viastitching_gui):
             y += step_y
 
         if viacount > 0:
-            wx.MessageBox(_(u"Implanted: %d vias!") % viacount)
+            wx.MessageBox(_(u"Inserted %d vias!") % viacount)
             # commit.Push()
             pcbnew.Refresh()
         else:
-            wx.MessageBox(_(u"No vias implanted!"))
+            wx.MessageBox(_(u"No vias were inserted..."))
 
     def onProcessAction(self, event):
         """Manage main button (Ok) click event."""
