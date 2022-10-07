@@ -166,10 +166,10 @@ class viastitching_gui ( wx.Dialog ):
 		self.m_rClear = wx.RadioButton( self, wx.ID_ANY, _(u"Clear"), wx.DefaultPosition, wx.DefaultSize, 0 )
 		bHSizer5.Add( self.m_rClear, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL|wx.ALL|wx.EXPAND, 5 )
 
-		self.m_chkClearOwn = wx.CheckBox( self, wx.ID_ANY, _(u"Remove all vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
-		self.m_chkClearOwn.Enable( False )
+		self.m_chkRemoveAll = wx.CheckBox( self, wx.ID_ANY, _(u"Remove all vias"), wx.DefaultPosition, wx.DefaultSize, 0 )
+		self.m_chkRemoveAll.Enable( False )
 
-		bHSizer5.Add( self.m_chkClearOwn, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
+		bHSizer5.Add( self.m_chkRemoveAll, 0, wx.ALIGN_CENTER_VERTICAL|wx.ALL, 5 )
 
 
 		bMainSizer.Add( bHSizer5, 0, wx.ALIGN_CENTER_HORIZONTAL|wx.ALIGN_CENTER_VERTICAL, 5 )

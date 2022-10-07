@@ -31,7 +31,7 @@ class ViaStitchingDialog(viastitching_gui):
         self.m_btnOk.Bind(wx.EVT_BUTTON, self.onProcessAction)
         self.m_rClear.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
         self.m_rFill.Bind(wx.EVT_RADIOBUTTON, self.onRadioButtonCheck)
-        self.m_chkClearOwn.Disable()
+        self.m_chkRemoveAll.Disable()
         self.board = pcbnew.GetBoard()
         self.pcb_group = None
 
@@ -175,7 +175,7 @@ class ViaStitchingDialog(viastitching_gui):
     def ClearArea(self):
         """Clear selected area."""
 
-        undo = self.m_chkClearOwn.IsChecked()
+        remove_all = self.m_chkRemoveAll.IsChecked()
         drillsize = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
         viasize = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
         netname = self.m_cbNet.GetStringSelection()
@@ -188,13 +188,13 @@ class ViaStitchingDialog(viastitching_gui):
                 # otherwise are removed vias matching values set in the dialog.
 
                 # if undo and (item.GetTimeStamp() == __timecode__):
-                if undo and (self.pcb_group is not None):
+                if (not remove_all) and (self.pcb_group is not None):
                     group = item.GetParentGroup()
-                    if(group is not None and group.GetName() == __viagroupname__):
+                    if (group is not None and group.GetName() == __viagroupname__):
                         self.board.Remove(item)
                         viacount += 1
                         # commit.Remove(item)
-                elif (not undo) and self.area.HitTestFilledArea(self.area.GetLayer(), item.GetPosition(), 0) and (item.GetDrillValue() == drillsize) and (item.GetWidth() == viasize) and (item.GetNetname() == netname):
+                elif remove_all and self.area.HitTestFilledArea(self.area.GetLayer(), item.GetPosition(), 0) and (item.GetDrillValue() == drillsize) and (item.GetWidth() == viasize) and (item.GetNetname() == netname):
                     self.board.Remove(item)
                     viacount += 1
                     # commit.Remove(item)
@@ -357,9 +357,9 @@ class ViaStitchingDialog(viastitching_gui):
         """Manage radio button state change event."""
 
         if self.m_rClear.GetValue():
-            self.m_chkClearOwn.Enable()
+            self.m_chkRemoveAll.Enable()
         else:
-            self.m_chkClearOwn.Disable()
+            self.m_chkRemoveAll.Disable()
 
     def onCloseWindow(self, event):
         """Manage Close button click event."""
