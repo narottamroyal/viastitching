@@ -25,7 +25,7 @@ class ViaStitchingDialog(viastitching_gui):
         """Initialize the brand new instance."""
 
         super(ViaStitchingDialog, self).__init__(None)
-        self.SetTitle(_(u"Via Stitching v{0}").format(__version__))
+        self.SetTitle(_("Via Stitching v{0}").format(__version__))
         self.Bind(wx.EVT_CLOSE, self.onCloseWindow)
         self.m_btnCancel.Bind(wx.EVT_BUTTON, self.onCloseWindow)
         self.m_btnOk.Bind(wx.EVT_BUTTON, self.onProcessAction)
@@ -53,27 +53,29 @@ class ViaStitchingDialog(viastitching_gui):
         if units_mode == 0:
             self.ToUserUnit = pcbnew.ToMils
             self.FromUserUnit = pcbnew.FromMils
-            self.m_lblUnit1.SetLabel(_(u"mils"))
-            self.m_lblUnit2.SetLabel(_(u"mils"))
-            self.m_lblUnit3.SetLabel(_(u"mils"))
-            self.m_lblUnit4.SetLabel(_(u"mils"))
+            self.m_lblUnit1.SetLabel(_("mils"))
+            self.m_lblUnit2.SetLabel(_("mils"))
+            self.m_lblUnit3.SetLabel(_("mils"))
+            self.m_lblUnit4.SetLabel(_("mils"))
         elif units_mode == 1:
             self.ToUserUnit = pcbnew.ToMM
             self.FromUserUnit = pcbnew.FromMM
-            self.m_lblUnit1.SetLabel(_(u"mm"))
-            self.m_lblUnit2.SetLabel(_(u"mm"))
-            self.m_lblUnit3.SetLabel(_(u"mm"))
-            self.m_lblUnit4.SetLabel(_(u"mm"))
+            self.m_lblUnit1.SetLabel(_("mm"))
+            self.m_lblUnit2.SetLabel(_("mm"))
+            self.m_lblUnit3.SetLabel(_("mm"))
+            self.m_lblUnit4.SetLabel(_("mm"))
         else:
-            wx.MessageBox(_(u"Not a valid frame"))
+            wx.MessageBox(_("Not a valid frame"))
             self.Destroy()
 
         # Get current via dimensions
         settings = board.GetDesignSettings()
         self.m_txtViaSize.SetValue(
-            "%.6f" % self.ToUserUnit(settings.GetCurrentViaSize()))
+            "%.6f" % self.ToUserUnit(settings.GetCurrentViaSize())
+        )
         self.m_txtViaDrillSize.SetValue(
-            "%.6f" % self.ToUserUnit(settings.GetCurrentViaDrill()))
+            "%.6f" % self.ToUserUnit(settings.GetCurrentViaDrill())
+        )
 
         # Set default spacing to double the current via width
         spacing = self.ToUserUnit(settings.GetCurrentViaSize()) * 2
@@ -87,7 +89,8 @@ class ViaStitchingDialog(viastitching_gui):
         # Set default clearances
         self.m_txtEdgeClearance.SetValue("0")
         self.m_txtTrackClearance.SetValue(
-            "%.6f" % self.ToUserUnit(settings.GetBiggestClearanceValue()))
+            "%.6f" % self.ToUserUnit(settings.GetBiggestClearanceValue())
+        )
 
         self.area = None
         self.net = None
@@ -95,7 +98,7 @@ class ViaStitchingDialog(viastitching_gui):
 
         # Check for selected area
         if not self.GetAreaConfig():
-            wx.MessageBox(_(u"Please select a valid area"))
+            wx.MessageBox(_("Please select a valid area"))
             self.Destroy()
         else:
             # Get overlapping items
@@ -105,7 +108,7 @@ class ViaStitchingDialog(viastitching_gui):
 
     def GetOverlappingItems(self):
         """Collect overlapping items.
-            Every item found inside bounding box is a candidate to be inspected for overlapping.
+        Every item found inside bounding box is a candidate to be inspected for overlapping.
         """
 
         area_bbox = self.area.GetBoundingBox()
@@ -120,7 +123,11 @@ class ViaStitchingDialog(viastitching_gui):
         self.overlappings = []
 
         for item in tracks:
-            if type(item) in [pcbnew.PCB_ARC, pcbnew.PCB_TRACK, pcbnew.PCB_VIA] and item.GetBoundingBox().Intersects(area_bbox):
+            if type(item) in [
+                pcbnew.PCB_ARC,
+                pcbnew.PCB_TRACK,
+                pcbnew.PCB_VIA,
+            ] and item.GetBoundingBox().Intersects(area_bbox):
                 self.overlappings.append(item)
 
         for item in modules:
@@ -190,17 +197,25 @@ class ViaStitchingDialog(viastitching_gui):
                 # if undo and (item.GetTimeStamp() == __timecode__):
                 if (not remove_all) and (self.pcb_group is not None):
                     group = item.GetParentGroup()
-                    if (group is not None and group.GetName() == __viagroupname__):
+                    if group is not None and group.GetName() == __viagroupname__:
                         self.board.Remove(item)
                         viacount += 1
                         # commit.Remove(item)
-                elif remove_all and self.area.HitTestFilledArea(self.area.GetLayer(), item.GetPosition(), 0) and (item.GetDrillValue() == drillsize) and (item.GetWidth() == viasize) and (item.GetNetname() == netname):
+                elif (
+                    remove_all
+                    and self.area.HitTestFilledArea(
+                        self.area.GetLayer(), item.GetPosition(), 0
+                    )
+                    and (item.GetDrillValue() == drillsize)
+                    and (item.GetWidth() == viasize)
+                    and (item.GetNetname() == netname)
+                ):
                     self.board.Remove(item)
                     viacount += 1
                     # commit.Remove(item)
 
         if viacount > 0:
-            wx.MessageBox(_(u"Removed %d vias!") % viacount)
+            wx.MessageBox(_("Removed %d vias!") % viacount)
             # commit.Push()
             pcbnew.Refresh()
 
@@ -221,32 +236,24 @@ class ViaStitchingDialog(viastitching_gui):
         # Calculate minimum distance from corners
         # TODO: remove?
         for i in range(0, corners):
-            corner = area.GetCornerPosition(i)
-            p2 = corner.getWxPoint()
-            distance = sqrt((p2.x - p1.x)**2 + (p2.y - p1.y)**2)
+            p2 = area.GetCornerPosition(i)
+            distance = sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
 
             if distance < clearance:
                 return False
 
         # Calculate minimum distance from edges
         for i in range(0, corners):
-            if i == corners-1:
-                corner1 = area.GetCornerPosition(corners-1)
+            if i == corners - 1:
+                corner1 = area.GetCornerPosition(corners - 1)
                 corner2 = area.GetCornerPosition(0)
             else:
                 corner1 = area.GetCornerPosition(i)
-                corner2 = area.GetCornerPosition(i+1)
-            pc1 = corner1.getWxPoint()
-            pc2 = corner2.getWxPoint()
+                corner2 = area.GetCornerPosition(i + 1)
 
-            if pc1.x != pc2.x:
-                m = (pc1.y - pc2.y)/(pc1.x - pc2.x)
-                q = pc1.y - (m*pc1.x)
-                distance = math.fabs(p1.y-m*p1.x-q)/math.sqrt(1+m**2)
-            else:
-                distance = math.fabs(pc1.x - p1.x)
+            distance, _ = pnt2line(p1, corner1, corner2)
 
-            if distance < clearance:
+            if distance <= clearance:
                 return False
 
         return True
@@ -267,7 +274,8 @@ class ViaStitchingDialog(viastitching_gui):
                     return True
             elif type(item) is pcbnew.PCB_ARC or type(item) is pcbnew.PCB_TRACK:
                 clearance = self.FromUserUnit(
-                    float(self.m_txtTrackClearance.GetValue()))
+                    float(self.m_txtTrackClearance.GetValue())
+                )
                 track_shape = item.GetEffectiveShape()
                 via_shape = via.GetEffectiveShape()
                 if track_shape.Collide(via_shape, clearance):
@@ -286,14 +294,12 @@ class ViaStitchingDialog(viastitching_gui):
         """Fills selected area with vias."""
 
         via_size = self.FromUserUnit(float(self.m_txtViaSize.GetValue()))
-        drill_size = self.FromUserUnit(
-            float(self.m_txtViaDrillSize.GetValue()))
+        drill_size = self.FromUserUnit(float(self.m_txtViaDrillSize.GetValue()))
         step_x = self.FromUserUnit(float(self.m_txtSpacingX.GetValue()))
         step_y = self.FromUserUnit(float(self.m_txtSpacingY.GetValue()))
         offset_x = self.FromUserUnit(float(self.m_txtOffsetX.GetValue()))
         offset_y = self.FromUserUnit(float(self.m_txtOffsetY.GetValue()))
-        clearance = self.FromUserUnit(
-            float(self.m_txtEdgeClearance.GetValue()))
+        clearance = self.FromUserUnit(float(self.m_txtEdgeClearance.GetValue()))
         bbox = self.area.GetBoundingBox()
         top = bbox.GetTop()
         bottom = bbox.GetBottom()
@@ -303,7 +309,8 @@ class ViaStitchingDialog(viastitching_gui):
         netcode = self.board.GetNetcodeFromNetname(netname)
         pattern = self.m_cbPattern.GetStringSelection()
         offset_row = False
-        layer = self.area.GetLayer()
+        layer_set = self.area.GetLayerSet()
+        layers = list(layer_set.Seq())
         # commit = pcbnew.COMMIT()
 
         # Cycle through area bounding box checking and inserting vias
@@ -313,22 +320,24 @@ class ViaStitchingDialog(viastitching_gui):
             x = left + offset_x
             if pattern == "Star":
                 # Offset every second row to create star pattern
-                x += step_x / 2 if offset_row else 0
+                x += int(step_x / 2) if offset_row else 0
                 offset_row = not offset_row
 
             while x <= right:
-                p = pcbnew.wxPoint(x, y)
-                if self.area.HitTestFilledArea(layer, p, 0):
+                p = pcbnew.VECTOR2I(x, y)
+                if all(self.area.HitTestFilledArea(layer, p, 0) for layer in layers):
                     via = pcbnew.PCB_VIA(self.board)
                     via.SetPosition(p)
-                    via.SetLayer(layer)
+                    via.SetLayerSet(layer_set)
                     via.SetNetCode(netcode)
                     via.SetDrill(drill_size)
                     via.SetWidth(via_size)
                     # via.SetTimeStamp(__timecode__)
                     if not self.CheckOverlap(via):
                         # Check clearance only if clearance value differs from 0 (disabled)
-                        if (clearance == 0) or self.CheckClearance(p, self.area, clearance):
+                        if (clearance == 0) or self.CheckClearance(
+                            p, self.area, clearance
+                        ):
                             self.board.Add(via)
                             # commit.Add(via)
                             self.pcb_group.AddItem(via)
@@ -337,11 +346,11 @@ class ViaStitchingDialog(viastitching_gui):
             y += step_y
 
         if viacount > 0:
-            wx.MessageBox(_(u"Inserted %d vias!") % viacount)
+            wx.MessageBox(_("Inserted %d vias!") % viacount)
             # commit.Push()
             pcbnew.Refresh()
         else:
-            wx.MessageBox(_(u"No vias were inserted..."))
+            wx.MessageBox(_("No vias were inserted..."))
 
     def onProcessAction(self, event):
         """Manage main button (Ok) click event."""
@@ -373,3 +382,75 @@ def InitViaStitchingDialog(board):
     dlg = ViaStitchingDialog(board)
     dlg.Show(True)
     return dlg
+
+
+class aVector:
+    def __init__(self, point: pcbnew.wxPoint | list):
+        if isinstance(point, pcbnew.wxPoint):
+            self.x = float(point.x)
+            self.y = float(point.y)
+        elif isinstance(point, list):
+            self.x = point[0]
+            self.y = point[1]
+
+    def __sub__(self, other: pcbnew.wxPoint):
+        return aVector([self.x - float(other.x), self.y - float(other.y)])
+
+    def __mul__(self, other):
+        return aVector([self.x * float(other), self.y * float(other)])
+
+    def __add__(self, other):
+        return aVector([self.x + float(other.x), self.y + float(other.y)])
+
+    def __truediv__(self, other):
+        return aVector([self.x / other, self.y / other])
+
+    @staticmethod
+    def norm(vector):
+        return sqrt(pow(vector.x, 2) + pow(vector.y, 2))
+
+    @staticmethod
+    def dot(vector1, vector2):
+        return vector1.x * vector2.x + vector1.y * vector2.y
+
+
+# Given a line with coordinates 'start' and 'end' and the
+# coordinates of a point 'point' the proc returns the shortest
+# distance from pnt to the line and the coordinates of the
+# nearest point on the line.
+#
+# 1  Convert the line segment to a vector ('line_vec').
+# 2  Create a vector connecting start to pnt ('pnt_vec').
+# 3  Find the length of the line vector ('line_len').
+# 4  Convert line_vec to a unit vector ('line_unitvec').
+# 5  Scale pnt_vec by line_len ('pnt_vec_scaled').
+# 6  Get the dot product of line_unitvec and pnt_vec_scaled ('t').
+# 7  Ensure t is in the range 0 to 1.
+# 8  Use t to get the nearest location on the line to the end
+#    of vector pnt_vec_scaled ('nearest').
+# 9  Calculate the distance from nearest to pnt_vec_scaled.
+# 10 Translate nearest back to the start/end line.
+# Malcolm Kesson 16 Dec 2012
+def pnt2line(point: pcbnew.wxPoint, start: pcbnew.wxPoint, end: pcbnew.wxPoint):
+    pnt = vector([point.x, point.y])
+    strt = vector([start.x, start.y])
+    nd = vector([end.x, end.y])
+    line_vec = nd - strt
+    pnt_vec = pnt - strt
+    line_len = norm(line_vec)
+    line_unitvec = line_vec / line_len
+    pnt_vec_scaled = pnt_vec / line_len
+    t = dot(line_unitvec, pnt_vec_scaled)
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    nearest = line_vec * t
+    dist = norm(pnt_vec - nearest)
+    nearest = nearest + strt
+    return dist, nearest
+
+
+norm = aVector.norm
+vector = aVector
+dot = aVector.dot
